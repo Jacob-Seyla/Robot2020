@@ -9,35 +9,43 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class DriveSub extends SubsystemBase {
-
-  // Pose2d pose1 = new Pose2d(0, 0, new Rotation2d(Math.PI/2.0));
-
-  DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(new Rotation2d());
+  
+  DifferentialDriveOdometry m_odometry;
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   public DriveSub() {
-
+    resetEncoders();
+    zeroHeading();
+    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
   }
 
   public void teleDrive(){
     Constants.DiffDrive.arcadeDrive(RobotContainer.driver.getRawAxis(1), -RobotContainer.driver.getRawAxis(4));
-    // Constants.MecDrive.driveCartesian(RobotContainer.driver.getRawAxis(0), RobotContainer.driver.getRawAxis(1), RobotContainer.driver.getRawAxis(4));
   }
 
-  public void drive(double ySpeed, double rotation){
-    Constants.DiffDrive.arcadeDrive(ySpeed, rotation);
-    
+  public void drive(double xSpeed, double rotation){
+    Constants.DiffDrive.arcadeDrive(xSpeed, rotation);
+  }
+
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(
+      (Constants.backLeft.getSensorCollection().getQuadratureVelocity()/Constants.ticksPerRevolution)*Constants.wheelCircumferenceMeters, 
+      (-Constants.backRight.getSensorCollection().getQuadratureVelocity()/Constants.ticksPerRevolution)*Constants.wheelCircumferenceMeters);
+  }
+
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    Constants.left.setVoltage(-leftVolts);
+    Constants.right.setVoltage(rightVolts);
   }
 
   public Pose2d getPose(){
@@ -46,7 +54,6 @@ public class DriveSub extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose){
     m_odometry.resetPosition(pose, getAngle());
-
   }
 
   public Rotation2d getAngle(){
@@ -62,16 +69,15 @@ public class DriveSub extends SubsystemBase {
     m_gyro.reset();
   }
 
-  public void resetEncoder(){
+  public void resetEncoders(){
     Constants.backLeft.getSensorCollection().setQuadraturePosition(0, 10);
     Constants.backRight.getSensorCollection().setQuadraturePosition(0, 10);
   }
 
   @Override
   public void periodic() {
-    m_odometry.update(new Rotation2d(getHeading()), 
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), 
     (Constants.backLeft.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters, 
-    (Constants.backRight.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
-    // This method will be called once per scheduler run
+    (-Constants.backRight.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
   }
 }

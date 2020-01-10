@@ -31,7 +31,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-
     driveSub = new DriveSub();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -39,10 +38,8 @@ public class Robot extends TimedRobot {
 
     Constants.DiffDrive.setSafetyEnabled(false);
 
-    driveSub.zeroHeading();
-
-    driveSub.resetEncoder();
-
+    // Constants.left.setInverted(true);
+    // Constants.right.setInverted(false);
   }
 
   /**
@@ -75,14 +72,10 @@ public class Robot extends TimedRobot {
   /**
    * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
    */
+
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    driveSub.zeroHeading();
-
-    driveSub.resetEncoder();
-    // Constants.backRight.getSensorCollection().setQuadraturePosition(0, 10);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -95,10 +88,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    SmartDashboard.putNumber("Back Right", Constants.backRight.getSensorCollection().getQuadraturePosition());
-    SmartDashboard.putNumber("Back Left", Constants.backLeft.getSensorCollection().getQuadraturePosition());
-    SmartDashboard.putNumber("HEADING GYRO", driveSub.getHeading());
-  }
+    SmartDashboarding();
+}
 
   @Override
   public void teleopInit() {
@@ -117,24 +108,24 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    // System.out.println(driveSub.getAngle());
-    System.out.println(driveSub.getPose());
+    SmartDashboarding();
+    // SmartDashboard.putNumber("Drive Fowards???", driveSub.);
+    // SmartDashboard.putNumber("axis 4", RobotContainer.driver.getRawAxis(4));
+  }
 
-    // SmartDashboard.putNumber("HEading?", driveSub.g);
-
-
-    // SmartDashboard.putNumber("ANGLE GYRO", driveSub.getAngle());
-
-    SmartDashboard.putNumber("HEADING GYRO", driveSub.getHeading());
-    SmartDashboard.putNumber("Back Right", Constants.backRight.getSensorCollection().getQuadraturePosition());
-    SmartDashboard.putNumber("Back Left", Constants.backLeft.getSensorCollection().getQuadraturePosition());
-    SmartDashboard.putNumber("Right Disatnce", (Constants.backRight.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
-    SmartDashboard.putNumber("Left Disatnce", (Constants.backLeft.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
-
-    if(RobotContainer.da.get()){
-      driveSub.resetEncoder();
-      driveSub.zeroHeading();
-    }
+  public static void SmartDashboarding(){
+    SmartDashboard.putNumber("BR", Constants.backRight.getSensorCollection().getQuadraturePosition());
+    SmartDashboard.putNumber("BL", Constants.backLeft.getSensorCollection().getQuadraturePosition());
+    SmartDashboard.putNumber("Gyro Heading", driveSub.getHeading());
+    SmartDashboard.putString("Pose", driveSub.getPose().toString());
+    SmartDashboard.putNumber("R Dist", (Constants.backRight.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
+    SmartDashboard.putNumber("L Dist", (Constants.backLeft.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
+    SmartDashboard.putNumber("R Vel", (Constants.backRight.getSensorCollection().getQuadratureVelocity() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
+    SmartDashboard.putNumber("L Vel", (Constants.backLeft.getSensorCollection().getQuadratureVelocity() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
+    SmartDashboard.putNumber("axis 1", RobotContainer.driver.getRawAxis(1));
+    SmartDashboard.putNumber("axis 4", RobotContainer.driver.getRawAxis(4));
+    SmartDashboard.putNumber("R volts", Constants.backRight.getMotorOutputVoltage());
+    SmartDashboard.putNumber("L volts", -Constants.backLeft.getMotorOutputVoltage());
   }
 
   @Override
