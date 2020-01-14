@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.AutoCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -43,6 +44,8 @@ public class RobotContainer {
   // private final Intake intake  = new Intake();
 
   // private BasicArmCommand armCommand = new BasicArmCommand();
+
+  AutoCommand autoCommand = new AutoCommand();
 
   public static Joystick driver = new Joystick(0);
 
@@ -124,6 +127,7 @@ public class RobotContainer {
 
 
     // An ExampleCommand will run in autonomous
+    // return autoCommand;
     return ramseteCommand.andThen(() -> Robot.driveSub.drive(0, 0));
   }
 }

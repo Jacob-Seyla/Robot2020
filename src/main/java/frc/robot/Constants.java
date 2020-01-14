@@ -33,7 +33,7 @@ public final class Constants {
     
     public static DifferentialDrive DiffDrive = new DifferentialDrive(left, right);
 
-    public static final double ticksPerRevolution = 1024.0;
+    public static final double ticksPerRevolution = 4096.0;
     public static final double wheelCircumferenceMeters = 0.318; //0.0254 * 8 * Math.PI;
 
     public static final class DriveConstants {
@@ -46,7 +46,7 @@ public final class Constants {
 
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
 
-        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxSpeedMetersPerSecond = 1;
 
         // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
         // These characterization values MUST be determined either experimentally or theoretically
