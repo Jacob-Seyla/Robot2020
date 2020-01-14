@@ -120,11 +120,14 @@ public class Robot extends TimedRobot {
   }
 
   public static void SmartDashboarding(){
+    SmartDashboard.putString("Wheel Speeds", driveSub.getWheelSpeeds().toString());
     SmartDashboard.putNumber("BR", Constants.backRight.getSensorCollection().getQuadraturePosition());
     SmartDashboard.putNumber("BL", Constants.backLeft.getSensorCollection().getQuadraturePosition());
     SmartDashboard.putNumber("Gyro Heading", driveSub.getHeading());
     SmartDashboard.putNumber("Raw gyro", driveSub.m_gyro.getAngle());
-    SmartDashboard.putString("Pose", driveSub.getPose().toString());
+    // SmartDashboard.putString("Pose", driveSub.getPose().toString());
+    SmartDashboard.putString("Pose Rot", driveSub.getPose().getRotation().toString());
+    SmartDashboard.putString("Pose Dist", driveSub.getPose().getTranslation().toString());
     SmartDashboard.putNumber("R Dist", (Constants.backRight.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
     SmartDashboard.putNumber("L Dist", (Constants.backLeft.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
     SmartDashboard.putNumber("R Vel", (Constants.backRight.getSensorCollection().getQuadratureVelocity() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);

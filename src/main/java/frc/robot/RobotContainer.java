@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryParameterizer;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -101,10 +102,10 @@ public class RobotContainer {
     Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
       new Pose2d(0,0,new Rotation2d(0)), 
       List.of(
-        new Translation2d(0.5, 0)
-        // new Translation2d(2 / 2, -1 / 2)
+        // new Translation2d(.5,0),
+        // new Translation2d(1,0)
       ), 
-      new Pose2d(1,0,new Rotation2d(0)), config);
+      new Pose2d(1,0,new Rotation2d(Math.toRadians(0))), config);
 
       // final DiffDriveControllerCommand ddcc = new DiffDriveControllerCommand(exampleTrajectory, driveSub :: getPose, DriveConstants.kDriveKinematics, 
       // new PIDController(AutoConstants.kPYController, 0, 0),
@@ -118,8 +119,8 @@ public class RobotContainer {
         new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter),
         DriveConstants.kDriveKinematics,
         Robot.driveSub::getWheelSpeeds,
-        new PIDController(DriveConstants.kPDriveVel, 0, 0),
-        new PIDController(DriveConstants.kPDriveVel, 0, 0),
+        new PIDController(DriveConstants.kPDriveVel, 0, DriveConstants.kDDriveVel),
+        new PIDController(DriveConstants.kPDriveVel, 0, DriveConstants.kDDriveVel),
         // RamseteCommand passes volts to the callback
         Robot.driveSub::tankDriveVolts,
         Robot.driveSub

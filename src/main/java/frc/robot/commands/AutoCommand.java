@@ -62,8 +62,8 @@ RamseteCommand ramseteCommand = new RamseteCommand(
   new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter),
   DriveConstants.kDriveKinematics,
   Robot.driveSub::getWheelSpeeds,
-  new PIDController(DriveConstants.kPDriveVel, 0, 0),
-  new PIDController(DriveConstants.kPDriveVel, 0, 0),
+  new PIDController(DriveConstants.kPDriveVel, 0, DriveConstants.kDDriveVel),
+  new PIDController(DriveConstants.kPDriveVel, 0, DriveConstants.kDDriveVel),
   // RamseteCommand passes volts to the callback
   Robot.driveSub::tankDriveVolts,
   Robot.driveSub
