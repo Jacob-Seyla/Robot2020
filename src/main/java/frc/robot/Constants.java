@@ -34,7 +34,7 @@ public final class Constants {
     public static DifferentialDrive DiffDrive = new DifferentialDrive(left, right);
 
     public static final double ticksPerRevolution = 4096.0;
-    public static final double wheelCircumferenceMeters = 3.9*Math.PI*0.0254; //0.0254 * 4 * Math.PI;
+    public static final double wheelCircumferenceMeters = 3.9*Math.PI*0.0254; //.3115 m
 
     public static final class DriveConstants {
         public static final int kFrontLeftDriveMotorPort = 1;
@@ -42,11 +42,11 @@ public final class Constants {
         public static final int kFrontRightDriveMotorPort = 3;
         public static final int kRearRightDriveMotorPort = 2;
 
-        public static final double kTrackWidth = .61; //4.91;//0.61;
-
+        public static final double kTrackWidth = 0.61;
+        // public static final double kTrackWidth = 4.91;
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
 
-        public static final double kMaxSpeedMetersPerSecond = 1;
+        // public static final double kMaxSpeedMetersPerSecond = 3;
 
         // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
         // These characterization values MUST be determined either experimentally or theoretically
@@ -56,17 +56,22 @@ public final class Constants {
         public static final double ksVolts = 1.08;
         public static final double kvVoltSecondsPerMeter = 0.0638;
         public static final double kaVoltSecondsSquaredPerMeter = 0.0169;
+        // public static final double kvVoltSecondsPerMeter = 1;
+        // public static final double kaVoltSecondsSquaredPerMeter = 1;
 
         // Example value only - as above, this must be tuned for your drive!
-        public static final double kPDriveVel = 1.72; //.8
-        public static final double kDDriveVel = 0.83;
+        public static final double kPDriveVel = 0.813;
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 1;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 1;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI / 3; //\\
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI / 3; //\\
+        // public static final double kMaxSpeedMetersPerSecond = 1;
+        // public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+        // public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI /3; //\\
+        // public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI /3; //\\\
+        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI; //\\
+        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI; //\\
 
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new //\\
         TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);

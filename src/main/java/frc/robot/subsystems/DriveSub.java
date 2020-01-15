@@ -26,7 +26,7 @@ public class DriveSub extends SubsystemBase {
   }
 
   public double getAverageEncoderDistance(){
-    return ((Constants.backLeft.getSensorCollection().getQuadraturePosition()/ Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters
+    return ((-Constants.backLeft.getSensorCollection().getQuadraturePosition()/ Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters
     + (Constants.backRight.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters) / 2.0;
   }
 
@@ -48,17 +48,16 @@ public class DriveSub extends SubsystemBase {
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(
-      (Constants.backLeft.getSensorCollection().getQuadratureVelocity()*10 / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters, 
+      (-Constants.backLeft.getSensorCollection().getQuadratureVelocity()*10 / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters, 
       (Constants.backRight.getSensorCollection().getQuadratureVelocity()*10 / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
 
-      // /Constants.ticksPerRevolution)*Constants.wheelCircumferenceMeters
   }
 
-  double maxVolt = 5; //5
+  double maxVolt = 100; //5
   public void tankDriveVolts(double leftVolts, double rightVolts) {
         Constants.left.setVoltage(MathUtil.clamp(-leftVolts, -maxVolt, maxVolt));
     Constants.right.setVoltage(MathUtil.clamp(rightVolts, -maxVolt, maxVolt));
-    System.out.println("L Volt:     " + leftVolts + "     R Volt      " + rightVolts);
+    // System.out.println("L Volt:     " + leftVolts + "     R Volt      " + rightVolts);
   }
 
   public Pose2d getPose(){
@@ -90,8 +89,8 @@ public class DriveSub extends SubsystemBase {
   @Override
   public void periodic() {
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), 
-    (Constants.backLeft.getSensorCollection().getQuadraturePosition()*10 / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters, 
-    (Constants.backRight.getSensorCollection().getQuadraturePosition()*10 / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
+    (-Constants.backLeft.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters, 
+    (Constants.backRight.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
 
     // / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters
   }

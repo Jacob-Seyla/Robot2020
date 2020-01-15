@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -22,39 +24,41 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryParameterizer;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.AutoCommand;
+// import frc.robot.commands.AutoCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
- * This class is where the bulk of the robot should be declared.  Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
- * (including subsystems, commands, and button mappings) should be declared here.
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a "declarative" paradigm, very little robot logic should
+ * actually be handled in the {@link Robot} periodic methods (other than the
+ * scheduler calls). Instead, the structure of the robot (including subsystems,
+ * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   // private final Lift lift = new Lift();
   // private final GyroSwerveDrive drive = new GyroSwerveDrive();
-  // private final Intake intake  = new Intake();
+  // private final Intake intake = new Intake();
 
   // private BasicArmCommand armCommand = new BasicArmCommand();
 
-  AutoCommand autoCommand = new AutoCommand();
+  // AutoCommand autoCommand = new AutoCommand();
 
   public static Joystick driver = new Joystick(0);
 
-	public static JoystickButton da = new JoystickButton(driver, 1);
+  public static JoystickButton da = new JoystickButton(driver, 1);
   public static JoystickButton db = new JoystickButton(driver, 2);
-  public static JoystickButton dx = new JoystickButton(driver, 3); 
+  public static JoystickButton dx = new JoystickButton(driver, 3);
   public static JoystickButton dy = new JoystickButton(driver, 4);
-	public static JoystickButton dbumperLeft = new JoystickButton(driver, 5);
+  public static JoystickButton dbumperLeft = new JoystickButton(driver, 5);
   public static JoystickButton dbumperRight = new JoystickButton(driver, 6);
   public static JoystickButton dback = new JoystickButton(driver, 7);
   public static JoystickButton dstart = new JoystickButton(driver, 8);
@@ -65,47 +69,47 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    Robot.driveSub.setDefaultCommand(new RunCommand( () -> Robot.driveSub.teleDrive() , Robot.driveSub));
+    Robot.driveSub.setDefaultCommand(new RunCommand(() -> Robot.driveSub.teleDrive(), Robot.driveSub));
   }
 
   /**
-   * Use this method to define your button->command mappings.  Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
-   * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * Use this method to define your button->command mappings. Buttons can be
+   * created by instantiating a {@link GenericHID} or one of its subclasses
+   * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
+   * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
   }
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
+   * @throws IOException
    */
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() throws IOException {
 
-    DifferentialDriveVoltageConstraint autoVoltageConstraint =
-        new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter, 
-        DriveConstants.kaVoltSecondsSquaredPerMeter), DriveConstants.kDriveKinematics, 10);
+    DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+        new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
+            DriveConstants.kaVoltSecondsSquaredPerMeter),
+        DriveConstants.kDriveKinematics, 10);
 
-    // TrajectoryConfig config = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-    // .setKinematics(DriveConstants.kDriveKinematics);
-
-    TrajectoryConfig config =
-        new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+    TrajectoryConfig config = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond,
+        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
             // Add kinematics to ensure max speed is actually obeyed
             .setKinematics(DriveConstants.kDriveKinematics)
             // Apply the voltage constraint
             .addConstraint(autoVoltageConstraint);
 
     Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-      new Pose2d(0,0,new Rotation2d(0)), 
-      List.of(
-        // new Translation2d(.5,0),
-        // new Translation2d(1,0)
-      ), 
-      new Pose2d(1,0,new Rotation2d(Math.toRadians(0))), config);
+    new Pose2d(0,0,new Rotation2d(0)),
+    List.of(
+    new Translation2d(1,1),
+    new Translation2d(2,-1)
+    ),
+    // new Pose2d(1,1,new Rotation2d(Math.toRadians(45))), config);
+    new Pose2d(3,0,new Rotation2d(0)), config);
+    // Trajectory exampleTrajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/example.wpilib.json"));
 
       // final DiffDriveControllerCommand ddcc = new DiffDriveControllerCommand(exampleTrajectory, driveSub :: getPose, DriveConstants.kDriveKinematics, 
       // new PIDController(AutoConstants.kPYController, 0, 0),
@@ -119,8 +123,8 @@ public class RobotContainer {
         new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter),
         DriveConstants.kDriveKinematics,
         Robot.driveSub::getWheelSpeeds,
-        new PIDController(DriveConstants.kPDriveVel, 0, DriveConstants.kDDriveVel),
-        new PIDController(DriveConstants.kPDriveVel, 0, DriveConstants.kDDriveVel),
+        new PIDController(DriveConstants.kPDriveVel, 0, 0),
+        new PIDController(DriveConstants.kPDriveVel, 0, 0),
         // RamseteCommand passes volts to the callback
         Robot.driveSub::tankDriveVolts,
         Robot.driveSub
