@@ -8,10 +8,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
@@ -22,7 +25,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.PathfinderFRC;
-import jaci.pathfinder.Trajectory;
+// import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.followers.EncoderFollower;
 
 /**
@@ -43,15 +46,15 @@ public class Robot extends TimedRobot {
  private static final String  k_path_name = "example";
  private SpeedController m_left_motor;
  private SpeedController m_right_motor;
- private AHRS m_gyro;
+ public static AHRS m_gyro;
  private EncoderFollower m_left_follower;
  private EncoderFollower  m_right_follower;
  private Notifier m_follower_notifier;
 
  public WPI_TalonSRX m_left_f;
  public WPI_TalonSRX m_right_f;
- public WPI_TalonSRX m_left_b;
- public WPI_TalonSRX m_right_b;
+ public static WPI_TalonSRX m_left_b;
+ public static WPI_TalonSRX m_right_b;
 
   private RobotContainer m_robotContainer;
 
@@ -61,6 +64,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    Constants.init();
     m_left_f = new WPI_TalonSRX(k_left_f);
     m_right_f = new WPI_TalonSRX(k_right_f);
     m_left_b = new WPI_TalonSRX(k_left_b);
@@ -125,10 +129,12 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     try {
-      Trajectory left_trajectory = PathfinderFRC.getTrajectory(k_path_name + ".right");
-      Trajectory right_trajectory = PathfinderFRC.getTrajectory(k_path_name + ".left");
-      m_left_follower = new EncoderFollower(left_trajectory);
-      m_right_follower = new EncoderFollower(right_trajectory);
+      // Trajectory left_trajectory = PathfinderFRC.getTrajectory(k_path_name + ".right");
+      // Trajectory right_trajectory = PathfinderFRC.getTrajectory(k_path_name + ".left");
+      Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/paths/example.wpilib.json"));
+      
+      // m_left_follower = new EncoderFollower(left_trajectory);
+      // m_right_follower = new EncoderFollower(right_trajectory);
      
      m_left_follower.configureEncoder(m_left_b.getSensorCollection().getQuadraturePosition(), k_ticks_per_rev, k_wheel_diameter);
       // You must tune the PID values on
@@ -141,7 +147,7 @@ public class Robot extends TimedRobot {
       m_right_follower.configurePIDVA(1.0, 0.0, 0.0, 1 / k_max_velocity, 0);
       m_follower_notifier = new Notifier(this::followPath);
      
-     m_follower_notifier.startPeriodic(left_trajectory.get(0).dt);
+    //  m_follower_notifier.startPeriodic(left_trajectory.get(0).dt);
       } catch (IOException e) {
       e.printStackTrace();
       }

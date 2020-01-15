@@ -4,5 +4,5 @@
   "maxAcceleration": 4.0,
   "wheelBase": 2.0,
   "gameName": "FIRST Power Up",
-  "outputDir": ""
+  "outputDir": "src/main/deploy"
 }
