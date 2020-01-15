@@ -43,6 +43,16 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     Constants.DiffDrive.setSafetyEnabled(false);
+    Constants.backLeft.configContinuousCurrentLimit(20);
+    Constants.frontRight.configContinuousCurrentLimit(20);
+    Constants.frontLeft.configContinuousCurrentLimit(20);
+    Constants.backRight.configContinuousCurrentLimit(20);
+
+    try {
+      m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     driveSub.resetEncoders();
     driveSub.zeroHeading();
@@ -92,12 +102,6 @@ public class Robot extends TimedRobot {
     driveSub.zeroHeading();
     driveSub.resetOdometry(new Pose2d());
 
-    try {
-      m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -115,6 +119,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     Constants.DiffDrive.setSafetyEnabled(false);
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

@@ -35,6 +35,9 @@ public class DriveSub extends SubsystemBase {
   }
 
   public void teleDrive(){
+    // if(RobotContainer.dx.get()){
+    //   tankDriveVolts(2, 2);
+    // }
     if(RobotContainer.db.get()){
       Constants.DiffDrive.arcadeDrive(RobotContainer.driver.getRawAxis(1) * 0.5, (-RobotContainer.driver.getRawAxis(4) * 0.5));
     }else {

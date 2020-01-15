@@ -42,8 +42,8 @@ public final class Constants {
         public static final int kFrontRightDriveMotorPort = 3;
         public static final int kRearRightDriveMotorPort = 2;
 
-        public static final double kTrackWidth = 0.61;
-        // public static final double kTrackWidth = 4.91;
+        // public static final double kTrackWidth = 0.61;
+        public static final double kTrackWidth = 1.187;
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
 
         // public static final double kMaxSpeedMetersPerSecond = 3;
@@ -60,7 +60,8 @@ public final class Constants {
         // public static final double kaVoltSecondsSquaredPerMeter = 1;
 
         // Example value only - as above, this must be tuned for your drive!
-        public static final double kPDriveVel = 0.813;
+        // public static final double kPDriveVel = 0.813;
+        public static final double kPDriveVel = 1.67;
     }
 
     public static final class AutoConstants {
