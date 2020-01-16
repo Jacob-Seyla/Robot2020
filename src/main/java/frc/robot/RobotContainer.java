@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.Forward;
+import frc.robot.commands.PathweaverPath;
 // import frc.robot.commands.AutoCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -50,7 +52,9 @@ public class RobotContainer {
 
   // private BasicArmCommand armCommand = new BasicArmCommand();
 
-  // AutoCommand autoCommand = new AutoCommand();
+
+  PathweaverPath pathWeaver = new PathweaverPath();
+  Forward forwardCommand = new Forward();
 
   public static Joystick driver = new Joystick(0);
 
@@ -65,7 +69,7 @@ public class RobotContainer {
   public static JoystickButton dterribleLeft = new JoystickButton(driver, 9);
   public static JoystickButton dterribleRight = new JoystickButton(driver, 10);
 
-  public RobotContainer() {
+  public RobotContainer() throws IOException { 
     // Configure the button bindings
     configureButtonBindings();
 
@@ -101,15 +105,17 @@ public class RobotContainer {
             // Apply the voltage co nstraint
             .addConstraint(autoVoltageConstraint);
 
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-    new Pose2d(0,0,new Rotation2d(0)),
-    List.of(
+    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+    // new Pose2d(0,0,new Rotation2d(0)),
+    // List.of(
     // new Translation2d(1,0),
-    // new Translation2d(2,-1)
-    ),
-    // new Pose2d(3,0,new Rotation2d(Math.toRadians(0))), config);
-    new Pose2d(1,-1,new Rotation2d(Math.toRadians(-90))), config);
-    // Trajectory exampleTrajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/example.wpilib.json"));
+    // new Translation2d(1,-1),
+    // new Translation2d(-1,-1),
+    // new Translation2d(-1,1)
+    // ),
+    // new Pose2d(1,1,new Rotation2d(Math.toRadians(0))), config);
+    // new Pose2d(1,1,new Rotation2d(Math.toRadians(90))), config);
+    Trajectory exampleTrajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/example.wpilib.json"));
 
       // final DiffDriveControllerCommand ddcc = new DiffDriveControllerCommand(exampleTrajectory, driveSub :: getPose, DriveConstants.kDriveKinematics, 
       // new PIDController(AutoConstants.kPYController, 0, 0),
@@ -132,7 +138,8 @@ public class RobotContainer {
 
 
     // An ExampleCommand will run in autonomous
-    // return autoCommand;
-    return ramseteCommand.andThen(() -> Robot.driveSub.drive(0, 0));
+    // return forwardCommand;
+    return pathWeaver;
+    // return ramseteCommand.andThen(() -> Robot.driveSub.drive(0, 0));
   }
 }
