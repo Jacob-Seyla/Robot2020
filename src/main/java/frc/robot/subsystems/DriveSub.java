@@ -31,14 +31,13 @@ public class DriveSub extends SubsystemBase {
   }
 
   public double getTurnRate(){
-    return m_gyro.getRate();
+    return gyroReversed*m_gyro.getRate();
   }
 
   public void teleDrive(){
-    // if(RobotContainer.dx.get()){
-    //   tankDriveVolts(2, 2);
-    // }
-    if(RobotContainer.db.get()){
+    if(RobotContainer.dx.get()){
+      tankDriveVolts(2, 2);
+    }else if(RobotContainer.db.get()){
       Constants.DiffDrive.arcadeDrive(RobotContainer.driver.getRawAxis(1) * 0.5, (-RobotContainer.driver.getRawAxis(4) * 0.5));
     }else {
       Constants.DiffDrive.arcadeDrive(RobotContainer.driver.getRawAxis(1), -RobotContainer.driver.getRawAxis(4));
@@ -53,13 +52,12 @@ public class DriveSub extends SubsystemBase {
     return new DifferentialDriveWheelSpeeds(
       (-Constants.backLeft.getSensorCollection().getQuadratureVelocity()*10 / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters, 
       (Constants.backRight.getSensorCollection().getQuadratureVelocity()*10 / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
-
   }
 
   double maxVolt = 100; //5
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-        Constants.left.setVoltage(MathUtil.clamp(-leftVolts, -maxVolt, maxVolt));
-    Constants.right.setVoltage(MathUtil.clamp(rightVolts, -maxVolt, maxVolt));
+        Constants.left.setVoltage(MathUtil.clamp(-rightVolts, -maxVolt, maxVolt));
+    Constants.right.setVoltage(MathUtil.clamp(leftVolts, -maxVolt, maxVolt));
     // System.out.println("L Volt:     " + leftVolts + "     R Volt      " + rightVolts);
   }
 
@@ -71,13 +69,15 @@ public class DriveSub extends SubsystemBase {
     m_odometry.resetPosition(pose, getAngle());
   }
 
+  private double gyroReversed = 1;
+
   public Rotation2d getAngle(){
-    return Rotation2d.fromDegrees(m_gyro.getAngle());
+    return Rotation2d.fromDegrees(gyroReversed*m_gyro.getAngle());
   }
 
   //robot's heading in degrees from -180 to 180
   public double getHeading(){
-    return Math.IEEEremainder(m_gyro.getAngle(), 360) ;
+    return Math.IEEEremainder(gyroReversed*m_gyro.getAngle(), 360) ;
   }
 
   public void zeroHeading(){
@@ -94,7 +94,5 @@ public class DriveSub extends SubsystemBase {
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), 
     (-Constants.backLeft.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters, 
     (Constants.backRight.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
-
-    // / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters
   }
 }

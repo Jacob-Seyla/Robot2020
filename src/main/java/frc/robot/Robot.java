@@ -118,8 +118,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    Constants.DiffDrive.setSafetyEnabled(false);
-
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -134,6 +132,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
     SmartDashboarding();
     if(RobotContainer.da.get()){
       driveSub.resetEncoders();
@@ -145,22 +144,26 @@ public class Robot extends TimedRobot {
   }
 
   public static void SmartDashboarding(){
-    SmartDashboard.putString("Wheel Speeds", driveSub.getWheelSpeeds().toString());
-    SmartDashboard.putNumber("BR", Constants.backRight.getSensorCollection().getQuadraturePosition());
-    SmartDashboard.putNumber("BL", -Constants.backLeft.getSensorCollection().getQuadraturePosition());
-    SmartDashboard.putNumber("Gyro Heading", driveSub.getHeading());
-    SmartDashboard.putNumber("Raw gyro", driveSub.m_gyro.getAngle());
+    // System.out.println(" gyro actual upfate rate:    " + driveSub.m_gyro.getActualUpdateRate());
+    // System.out.println(" gyro get last sensor times tsamp:    " + driveSub.m_gyro.getLastSensorTimestamp());
+
+
+    // SmartDashboard.putString("Wheel Speeds", driveSub.getWheelSpeeds().toString());
+    // SmartDashboard.putNumber("BR", Constants.backRight.getSensorCollection().getQuadraturePosition());
+    // SmartDashboard.putNumber("BL", -Constants.backLeft.getSensorCollection().getQuadraturePosition());
+    // SmartDashboard.putNumber("Gyro Heading", driveSub.getHeading());
+    // SmartDashboard.putNumber("Raw gyro", driveSub.m_gyro.getAngle());
     // SmartDashboard.putString("Pose", driveSub.getPose().toString());
-    SmartDashboard.putString("Pose Rot", driveSub.getPose().getRotation().toString());
-    SmartDashboard.putString("Pose Dist", driveSub.getPose().getTranslation().toString());
-    SmartDashboard.putNumber("R Dist", (Constants.backRight.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
-    SmartDashboard.putNumber("L Dist", (-Constants.backLeft.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
-    SmartDashboard.putNumber("R Vel", (Constants.backRight.getSensorCollection().getQuadratureVelocity() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
-    SmartDashboard.putNumber("L Vel", (-Constants.backLeft.getSensorCollection().getQuadratureVelocity() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
-    SmartDashboard.putNumber("axis 1", RobotContainer.driver.getRawAxis(1));
-    SmartDashboard.putNumber("axis 4", RobotContainer.driver.getRawAxis(4));
-    SmartDashboard.putNumber("R volts", Constants.backRight.getMotorOutputVoltage());
-    SmartDashboard.putNumber("L volts", -Constants.backLeft.getMotorOutputVoltage());
+    // SmartDashboard.putString("Pose Rot", driveSub.getPose().getRotation().toString());
+    // SmartDashboard.putString("Pose Dist", driveSub.getPose().getTranslation().toString());
+    // SmartDashboard.putNumber("R Dist", (Constants.backRight.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
+    // SmartDashboard.putNumber("L Dist", (-Constants.backLeft.getSensorCollection().getQuadraturePosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
+    // SmartDashboard.putNumber("R Vel", (Constants.backRight.getSensorCollection().getQuadratureVelocity() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
+    // SmartDashboard.putNumber("L Vel", (-Constants.backLeft.getSensorCollection().getQuadratureVelocity() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters);
+    // SmartDashboard.putNumber("axis 1", RobotContainer.driver.getRawAxis(1));
+    // SmartDashboard.putNumber("axis 4", RobotContainer.driver.getRawAxis(4));
+    // SmartDashboard.putNumber("R volts", Constants.backRight.getMotorOutputVoltage());
+    // SmartDashboard.putNumber("L volts", -Constants.backLeft.getMotorOutputVoltage());
   }
 
   @Override
