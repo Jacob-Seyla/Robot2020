@@ -7,10 +7,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
@@ -23,59 +19,47 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static WPI_TalonSRX frontRight = new WPI_TalonSRX(3);
-    public static WPI_TalonSRX backRight = new WPI_TalonSRX(2);
-    public static WPI_TalonSRX frontLeft = new WPI_TalonSRX(1);
-    public static WPI_TalonSRX backLeft = new WPI_TalonSRX(0);
+    // public static CANSparkMax r1 = new CANSparkMax(10, MotorType.kBrushless);
+    // public static CANSparkMax r2 = new CANSparkMax(11, MotorType.kBrushless);
+    // public static CANSparkMax l1 = new CANSparkMax(12, MotorType.kBrushless);
+    // public static CANSparkMax l2 = new CANSparkMax(13, MotorType.kBrushless);
 
-    public static SpeedControllerGroup left = new SpeedControllerGroup(frontLeft, backLeft);
-    public static SpeedControllerGroup right = new SpeedControllerGroup(frontRight, backRight);
+    // public static SpeedControllerGroup left = new SpeedControllerGroup(l1, l2);
+    // public static SpeedControllerGroup right = new SpeedControllerGroup(r1, r2);
     
-    public static DifferentialDrive DiffDrive = new DifferentialDrive(left, right);
+    // public static DifferentialDrive DiffDrive = new DifferentialDrive(left, right);
+
+    // Compressor compressor = new Compressor(1);
+    // DoubleSolenoid sol1 = new DoubleSolenoid(1, 0, 1);
 
     public static final double ticksPerRevolution = 4096.0;
-    public static final double wheelCircumferenceMeters = 3.9*Math.PI*0.0254; //.3115 m
+    public static final double wheelCircumferenceMeters = 6*Math.PI*0.0254;
 
     public static final class DriveConstants {
-        public static final int kFrontLeftDriveMotorPort = 1;
-        public static final int kRearLeftDriveMotorPort = 0;
-        public static final int kFrontRightDriveMotorPort = 3;
-        public static final int kRearRightDriveMotorPort = 2;
+        public static final int kl1Port = 10;
+        public static final int kl2Port = 11;
+        public static final int kr1Port = 12;
+        public static final int kr2Port = 13;
 
         // public static final double kTrackWidth = 0.61;
-        public static final double kTrackWidth = 1.187;
-        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
+        public static final double kTrackWidthLow = 1.187;
+        public static final DifferentialDriveKinematics kDriveKinematicsLow = new DifferentialDriveKinematics(kTrackWidthLow);
 
-        // public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double ksVoltsLow = 1.08;
+        public static final double kvVoltSecondsPerMeterLow = 0.0638;
+        public static final double kaVoltSecondsSquaredPerMeterLow = 0.0169;
 
-        // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
-        // These characterization values MUST be determined either experimentally or theoretically
-        // for *your* robot's drive.
-        // The Robot Characterization Toolsuite provides a convenient tool for obtaining these
-        // values for your robot.
-        public static final double ksVolts = 1.08;
-        public static final double kvVoltSecondsPerMeter = 0.0638;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.0169;
-        // public static final double kvVoltSecondsPerMeter = 1;
-        // public static final double kaVoltSecondsSquaredPerMeter = 1;
-
-        // Example value only - as above, this must be tuned for your drive!
-        // public static final double kPDriveVel = 0.822;
-        public static final double kPDriveVel = 2.1;
+        public static final double kPDriveVelLow = 2.1;
     }
 
     public static final class AutoConstants {
-        // public static final double kMaxSpeedMetersPerSecond = 1;
-        // public static final double kMaxAccelerationMetersPerSecondSquared = 1;
-        // public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI /3; //\\
-        // public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI /3; //\\\
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI; //\\
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI; //\\
+        public static final double kMaxSpeedMetersPerSecondLow = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquaredLow = 3;
+        public static final double kMaxAngularSpeedRadiansPerSecondLow = Math.PI; 
+        public static final double kMaxAngularSpeedRadiansPerSecondSquaredLow = Math.PI; 
 
-        public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new //\\
-        TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+        public static final TrapezoidProfile.Constraints kThetaControllerConstraintsLow = new 
+        TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecondLow, kMaxAngularSpeedRadiansPerSecondSquaredLow);
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2;

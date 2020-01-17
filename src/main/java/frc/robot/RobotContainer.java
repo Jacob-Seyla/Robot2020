@@ -8,31 +8,32 @@
 package frc.robot;
 
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.List;
+// import java.nio.file.Paths;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryParameterizer;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+// import edu.wpi.first.wpilibj.controller.PIDController;
+// import edu.wpi.first.wpilibj.controller.RamseteController;
+// import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+// import edu.wpi.first.wpilibj.trajectory.Trajectory;
+// import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+// import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+// import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+// import frc.robot.Constants.AutoConstants;
+// import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.Forward;
 import frc.robot.commands.PathweaverPath;
 // import frc.robot.commands.AutoCommand;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
+// import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -49,6 +50,19 @@ public class RobotContainer {
   // private final Lift lift = new Lift();
   // private final GyroSwerveDrive drive = new GyroSwerveDrive();
   // private final Intake intake = new Intake();
+
+  public static CANSparkMax r1 = new CANSparkMax(10, MotorType.kBrushless);
+  public static CANSparkMax r2 = new CANSparkMax(11, MotorType.kBrushless);
+  public static CANSparkMax l1 = new CANSparkMax(12, MotorType.kBrushless);
+  public static CANSparkMax l2 = new CANSparkMax(13, MotorType.kBrushless);
+
+  public static SpeedControllerGroup left = new SpeedControllerGroup(l1, l2);
+  public static SpeedControllerGroup right = new SpeedControllerGroup(r1, r2);
+  
+  public static DifferentialDrive DiffDrive = new DifferentialDrive(left, right);
+
+  public static Compressor compressor = new Compressor(1);
+  public static DoubleSolenoid sol1 = new DoubleSolenoid(1, 0, 1);
 
   // private BasicArmCommand armCommand = new BasicArmCommand();
 
@@ -93,17 +107,17 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() throws IOException {
 
-    DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
-        new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
-            DriveConstants.kaVoltSecondsSquaredPerMeter),
-        DriveConstants.kDriveKinematics, 10);
+    // DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+    //     new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
+    //         DriveConstants.kaVoltSecondsSquaredPerMeter),
+    //     DriveConstants.kDriveKinematics, 10);
 
-    TrajectoryConfig config = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics)
-            // Apply the voltage co nstraint
-            .addConstraint(autoVoltageConstraint);
+    // TrajectoryConfig config = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond,
+    //     AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+    //         // Add kinematics to ensure max speed is actually obeyed
+    //         .setKinematics(DriveConstants.kDriveKinematics)
+    //         // Apply the voltage co nstraint
+            // .addConstraint(autoVoltageConstraint);
 
     // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
     // new Pose2d(0,0,new Rotation2d(0)),
@@ -115,26 +129,21 @@ public class RobotContainer {
     // ),
     // new Pose2d(1,1,new Rotation2d(Math.toRadians(0))), config);
     // new Pose2d(1,1,new Rotation2d(Math.toRadians(90))), config);
-    Trajectory exampleTrajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/example.wpilib.json"));
+    // Trajectory exampleTrajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/example.wpilib.json"));
 
-      // final DiffDriveControllerCommand ddcc = new DiffDriveControllerCommand(exampleTrajectory, driveSub :: getPose, DriveConstants.kDriveKinematics, 
-      // new PIDController(AutoConstants.kPYController, 0, 0),
-      // new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints),
-      //   driveSub);
-
-      RamseteCommand ramseteCommand = new RamseteCommand(
-        exampleTrajectory,
-        Robot.driveSub::getPose,
-        new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
-        new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter),
-        DriveConstants.kDriveKinematics,
-        Robot.driveSub::getWheelSpeeds,
-        new PIDController(DriveConstants.kPDriveVel, 0, 0),
-        new PIDController(DriveConstants.kPDriveVel, 0, 0),
-        // RamseteCommand passes volts to the callback
-        Robot.driveSub::tankDriveVolts,
-        Robot.driveSub
-      );
+      // RamseteCommand ramseteCommand = new RamseteCommand(
+      //   exampleTrajectory,
+      //   Robot.driveSub::getPose,
+      //   new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+      //   new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter),
+      //   DriveConstants.kDriveKinematics,
+      //   Robot.driveSub::getWheelSpeeds,
+      //   new PIDController(DriveConstants.kPDriveVel, 0, 0),
+      //   new PIDController(DriveConstants.kPDriveVel, 0, 0),
+      //   // RamseteCommand passes volts to the callback
+      //   Robot.driveSub::tankDriveVolts,
+      //   Robot.driveSub
+      // );
 
 
     // An ExampleCommand will run in autonomous

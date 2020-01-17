@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 
@@ -34,18 +34,18 @@ public class Smiles extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveSub);
     
-    exampleTrajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/smiles.wpilib.json"));
+    exampleTrajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/smilesu.wpilib.json"));
    
     gordonRamsete = new RamseteCommand(
     exampleTrajectory,
     Robot.driveSub::getPose,
     new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
-    new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
-    DriveConstants.kaVoltSecondsSquaredPerMeter),
-    DriveConstants.kDriveKinematics, 
+    new SimpleMotorFeedforward(DriveConstants.ksVoltsLow, DriveConstants.kvVoltSecondsPerMeterLow,
+    DriveConstants.kaVoltSecondsSquaredPerMeterLow),
+    DriveConstants.kDriveKinematicsLow, 
     Robot.driveSub::getWheelSpeeds,
-    new PIDController(DriveConstants.kPDriveVel, 0, 0), 
-    new PIDController(DriveConstants.kPDriveVel, 0, 0),
+    new PIDController(DriveConstants.kPDriveVelLow, 0, 0), 
+    new PIDController(DriveConstants.kPDriveVelLow, 0, 0),
     // RamseteCommand passes volts to the callback
     Robot.driveSub::tankDriveVolts, 
     Robot.driveSub
@@ -66,8 +66,8 @@ public class Smiles extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Constants.left.set(0);
-    Constants.right.set(0);
+    RobotContainer.left.set(0);
+    RobotContainer.right.set(0);
   }
 
   // Returns true when the command should end.
