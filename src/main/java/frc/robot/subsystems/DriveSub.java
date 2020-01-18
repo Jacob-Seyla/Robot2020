@@ -39,15 +39,25 @@ public class DriveSub extends SubsystemBase {
 
   public void teleDrive(){
 
+    if(RobotContainer.da.get()){
+      RobotContainer.r1.set(0.5);
+    }else if(RobotContainer.db.get()){
+      RobotContainer.r2.set(0.5);
+    }else if(RobotContainer.dx.get()){
+      RobotContainer.l1.set(0.5);
+    }else if(RobotContainer.dy.get()){
+      RobotContainer.l2.set(0.5);
+    }
+
+
+
     if(RobotContainer.dback.get()){
       RobotContainer.sol1.set(Value.kForward);
     }else if(RobotContainer.dstart.get()){
       RobotContainer.sol1.set(Value.kReverse);
     }
 
-    if(RobotContainer.dx.get()){
-      tankDriveVolts(2, 2);
-    }else if(RobotContainer.dbumperLeft.get() || RobotContainer.da.get()){
+   if(RobotContainer.dbumperLeft.get()){
       RobotContainer.DiffDrive.arcadeDrive(RobotContainer.driver.getRawAxis(1) * 0.5, (-RobotContainer.driver.getRawAxis(4) * 0.5));
     }else {
       RobotContainer.DiffDrive.arcadeDrive(RobotContainer.driver.getRawAxis(1), -RobotContainer.driver.getRawAxis(4));

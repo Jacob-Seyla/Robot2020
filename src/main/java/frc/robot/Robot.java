@@ -149,7 +149,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     SmartDashboarding();
-    if(RobotContainer.da.get()){
+    if(RobotContainer.dbumperRight.get()){
       driveSub.resetEncoders();
       driveSub.resetOdometry(new Pose2d());
       driveSub.zeroHeading();
