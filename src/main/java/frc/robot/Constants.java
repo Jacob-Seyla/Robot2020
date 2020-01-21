@@ -32,8 +32,11 @@ public final class Constants {
     // Compressor compressor = new Compressor(1);
     // DoubleSolenoid sol1 = new DoubleSolenoid(1, 0, 1);
 
-    public static final double ticksPerRevolution = 4096.0;
-    public static final double wheelCircumferenceMeters = 6*Math.PI*0.0254;
+    public static final double ticksPerRevolutionLow = 19;
+    public static final double ticksPerRevolutionHigh = 6.4;
+    public static final double ratioGearLow = 18.86;
+    public static final double ratioGearHigh = 6.45;
+    public static final double wheelCircumferenceMeters = 6*Math.PI*0.0254; //0.4787
 
     public static final class DriveConstants {
         public static final int kl1Port = 10;
@@ -42,19 +45,25 @@ public final class Constants {
         public static final int kr2Port = 13;
 
         // public static final double kTrackWidth = 0.61;
-        public static final double kTrackWidthLow = 1.187;
-        public static final DifferentialDriveKinematics kDriveKinematicsLow = new DifferentialDriveKinematics(kTrackWidthLow);
+        public static final double kTrackWidth = 0.584;
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
 
-        public static final double ksVoltsLow = 1.08;
-        public static final double kvVoltSecondsPerMeterLow = 0.0638;
-        public static final double kaVoltSecondsSquaredPerMeterLow = 0.0169;
+        public static final double ksVoltsLow = 0.143; //0.143
+        public static final double kvVoltSecondsPerMeterLow = 0.121; //0.121
+        public static final double kaVoltSecondsSquaredPerMeterLow = 0.0116; //0.0116
 
-        public static final double kPDriveVelLow = 2.1;
+        public static final double kPDriveVelLow = 1.5; // 0.521
+
+        public static final double ksVoltsHigh = 0.116;
+        public static final double kvVoltSecondsPerMeterHigh = 0.0434;
+        public static final double kaVoltSecondsSquaredPerMeterHigh = 0.00749;
+
+        public static final double kPDriveVelHigh= 0.353;
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecondLow = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquaredLow = 3;
+        public static final double kMaxSpeedMetersPerSecondLow = 6;
+        public static final double kMaxAccelerationMetersPerSecondSquaredLow = 6;
         public static final double kMaxAngularSpeedRadiansPerSecondLow = Math.PI; 
         public static final double kMaxAngularSpeedRadiansPerSecondSquaredLow = Math.PI; 
 

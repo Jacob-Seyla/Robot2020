@@ -25,7 +25,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 
-public class Forward extends CommandBase {
+public class Forward2 extends CommandBase {
   /**
    * Creates a new Forward.
    */
@@ -45,7 +45,7 @@ public class Forward extends CommandBase {
     new Pose2d(0,0,new Rotation2d(0)),
     List.of(
     ),
-    new Pose2d(3,0,new Rotation2d(Math.toRadians(0))), config);
+    new Pose2d(1,0,new Rotation2d(Math.toRadians(0))), config);
           
   RamseteCommand gordonRamsete = new RamseteCommand(
     exampleTrajectory,
@@ -61,7 +61,7 @@ public class Forward extends CommandBase {
     Robot.driveSub
   );
 
-  public Forward() {
+  public Forward2() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveSub);
   }

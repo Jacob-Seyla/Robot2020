@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 // import frc.robot.Constants.AutoConstants;
 // import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.Forward;
-import frc.robot.commands.PathweaverPath;
+// import frc.robot.commands.PathweaverPath;
 // import frc.robot.commands.AutoCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 // import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -50,11 +50,11 @@ public class RobotContainer {
   // private final Lift lift = new Lift();
   // private final GyroSwerveDrive drive = new GyroSwerveDrive();
   // private final Intake intake = new Intake();
+  public static CANSparkMax l1 = new CANSparkMax(10, MotorType.kBrushless);
+  public static CANSparkMax l2 = new CANSparkMax(11, MotorType.kBrushless);
+  public static CANSparkMax r1 = new CANSparkMax(12, MotorType.kBrushless);
+  public static CANSparkMax r2 = new CANSparkMax(13, MotorType.kBrushless);
 
-  public static CANSparkMax r1 = new CANSparkMax(10, MotorType.kBrushless);
-  public static CANSparkMax r2 = new CANSparkMax(11, MotorType.kBrushless);
-  public static CANSparkMax l1 = new CANSparkMax(12, MotorType.kBrushless);
-  public static CANSparkMax l2 = new CANSparkMax(13, MotorType.kBrushless);
 
   public static SpeedControllerGroup left = new SpeedControllerGroup(l1, l2);
   public static SpeedControllerGroup right = new SpeedControllerGroup(r1, r2);
@@ -67,7 +67,7 @@ public class RobotContainer {
   // private BasicArmCommand armCommand = new BasicArmCommand();
 
 
-  PathweaverPath pathWeaver = new PathweaverPath();
+  // PathweaverPath pathWeaver = new PathweaverPath();
   Forward forwardCommand = new Forward();
 
   public static Joystick driver = new Joystick(0);
@@ -147,8 +147,8 @@ public class RobotContainer {
 
 
     // An ExampleCommand will run in autonomous
-    // return forwardCommand;
-    return pathWeaver;
+    return forwardCommand;
+    // return pathWeaver;
     // return ramseteCommand.andThen(() -> Robot.driveSub.drive(0, 0));
   }
 }

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -27,10 +28,13 @@ public class DriveSub extends SubsystemBase {
   }
 
   public double getAverageEncoderDistance(){
-    return ((-RobotContainer.l1.getEncoder().getPosition()/ Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters
-    + (-RobotContainer.l2.getEncoder().getPosition()/ Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters
-    + (RobotContainer.r1.getEncoder().getPosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters
-    + (RobotContainer.r2.getEncoder().getPosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters) / 4.0;
+    if(RobotContainer.sol1.get() == Value.kForward){
+      return ((RobotContainer.l1.getEncoder().getPosition()/ Constants.ticksPerRevolutionLow) * Constants.wheelCircumferenceMeters
+      + (-RobotContainer.r2.getEncoder().getPosition() / Constants.ticksPerRevolutionLow) * Constants.wheelCircumferenceMeters) / 2.0;
+    }else{
+      return ((RobotContainer.l1.getEncoder().getPosition()/ Constants.ticksPerRevolutionHigh) * Constants.wheelCircumferenceMeters
+      + (-RobotContainer.r2.getEncoder().getPosition() / Constants.ticksPerRevolutionHigh) * Constants.wheelCircumferenceMeters) / 2.0;
+    }
   }
 
   public double getTurnRate(){
@@ -39,28 +43,25 @@ public class DriveSub extends SubsystemBase {
 
   public void teleDrive(){
 
-    if(RobotContainer.da.get()){
-      RobotContainer.r1.set(0.5);
-    }else if(RobotContainer.db.get()){
-      RobotContainer.r2.set(0.5);
-    }else if(RobotContainer.dx.get()){
-      RobotContainer.l1.set(0.5);
-    }else if(RobotContainer.dy.get()){
-      RobotContainer.l2.set(0.5);
-    }
+    // RobotContainer.r1.setIdleMode(IdleMode.kBrake);
+    // RobotContainer.r2.setIdleMode(IdleMode.kBrake);
+    // RobotContainer.l1.setIdleMode(IdleMode.kBrake);
+    // RobotContainer.l2.setIdleMode(IdleMode.kBrake);
 
-
-
-    if(RobotContainer.dback.get()){
+    if(RobotContainer.dback.get()){//low
       RobotContainer.sol1.set(Value.kForward);
-    }else if(RobotContainer.dstart.get()){
+    }else if(RobotContainer.dstart.get()){//high
       RobotContainer.sol1.set(Value.kReverse);
     }
 
    if(RobotContainer.dbumperLeft.get()){
-      RobotContainer.DiffDrive.arcadeDrive(RobotContainer.driver.getRawAxis(1) * 0.5, (-RobotContainer.driver.getRawAxis(4) * 0.5));
-    }else {
-      RobotContainer.DiffDrive.arcadeDrive(RobotContainer.driver.getRawAxis(1), -RobotContainer.driver.getRawAxis(4));
+      RobotContainer.DiffDrive.arcadeDrive(-RobotContainer.driver.getRawAxis(1) * 0.5, (RobotContainer.driver.getRawAxis(4) * 0.5));
+    } else {
+      // RobotContainer.r1.setIdleMode(IdleMode.kCoast);
+      // RobotContainer.r2.setIdleMode(IdleMode.kCoast);
+      // RobotContainer.l1.setIdleMode(IdleMode.kCoast);
+      // RobotContainer.l2.setIdleMode(IdleMode.kCoast);
+      RobotContainer.DiffDrive.arcadeDrive(-RobotContainer.driver.getRawAxis(1), RobotContainer.driver.getRawAxis(4));
     }
   }
 
@@ -69,17 +70,16 @@ public class DriveSub extends SubsystemBase {
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    
     return new DifferentialDriveWheelSpeeds(
-      ((-RobotContainer.l1.getEncoder().getVelocity()/60 / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters +
-      (-RobotContainer.l2.getEncoder().getVelocity()/60 / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters)/2, 
-      ((RobotContainer.r1.getEncoder().getVelocity()/60 / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters +
-      (RobotContainer.r2.getEncoder().getVelocity()/60 / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters)/2);
+      (RobotContainer.l1.getEncoder().getVelocity()/60 / (RobotContainer.sol1.get() == Value.kForward ? Constants.ticksPerRevolutionLow : Constants.ticksPerRevolutionHigh) ) * Constants.wheelCircumferenceMeters, 
+      (-RobotContainer.r1.getEncoder().getVelocity()/60 / (RobotContainer.sol1.get() == Value.kForward ? Constants.ticksPerRevolutionLow : Constants.ticksPerRevolutionHigh)) * Constants.wheelCircumferenceMeters);
   }
 
   double maxVolt = 100; //5
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    RobotContainer.left.setVoltage(MathUtil.clamp(-rightVolts, -maxVolt, maxVolt));
-    RobotContainer.right.setVoltage(MathUtil.clamp(leftVolts, -maxVolt, maxVolt));
+    RobotContainer.left.setVoltage(MathUtil.clamp(rightVolts, -maxVolt, maxVolt));
+    RobotContainer.right.setVoltage(MathUtil.clamp(-leftVolts, -maxVolt, maxVolt));
     // System.out.println("L Volt:     " + leftVolts + "     R Volt      " + rightVolts);
   }
 
@@ -115,10 +115,14 @@ public class DriveSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_odometry.update(Rotation2d.fromDegrees(getHeading()), 
-    ((-RobotContainer.l1.getEncoder().getPosition()/ Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters
-    + (-RobotContainer.l2.getEncoder().getPosition()/ Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters)/2, 
-    ((RobotContainer.r1.getEncoder().getPosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters
-    + (RobotContainer.r2.getEncoder().getPosition() / Constants.ticksPerRevolution) * Constants.wheelCircumferenceMeters)/2);
+    if(RobotContainer.sol1.get() == Value.kForward){
+      m_odometry.update(Rotation2d.fromDegrees(getHeading()), 
+      (RobotContainer.l1.getEncoder().getPosition()/ Constants.ticksPerRevolutionLow) * Constants.wheelCircumferenceMeters, 
+      (-RobotContainer.r1.getEncoder().getPosition() / Constants.ticksPerRevolutionLow) * Constants.wheelCircumferenceMeters);
+    }else{
+      m_odometry.update(Rotation2d.fromDegrees(getHeading()), 
+      (RobotContainer.l1.getEncoder().getPosition()/ Constants.ticksPerRevolutionHigh) * Constants.wheelCircumferenceMeters, 
+      (-RobotContainer.r1.getEncoder().getPosition() / Constants.ticksPerRevolutionHigh) * Constants.wheelCircumferenceMeters);
+    }
   }
 }

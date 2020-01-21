@@ -9,13 +9,18 @@ package frc.robot;
 
 import java.io.IOException;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.BasicTurn;
 import frc.robot.commands.Forward;
+import frc.robot.commands.Forward2;
 import frc.robot.subsystems.DriveSub;
 
 /**
@@ -43,6 +48,28 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
+    RobotContainer.r1.setIdleMode(IdleMode.kCoast);
+    RobotContainer.r2.setIdleMode(IdleMode.kCoast);
+    RobotContainer.l1.setIdleMode(IdleMode.kCoast);
+    RobotContainer.l2.setIdleMode(IdleMode.kCoast);
+    // RobotContainer.r1.setIdleMode(IdleMode.kBrake);
+    // RobotContainer.r2.setIdleMode(IdleMode.kBrake);
+    // RobotContainer.l1.setIdleMode(IdleMode.kBrake);
+    // RobotContainer.l2.setIdleMode(IdleMode.kBrake);
+    double ramprate = .25;
+    RobotContainer.l1.setSmartCurrentLimit(40);
+    RobotContainer.l1.setClosedLoopRampRate(ramprate);
+    RobotContainer.l1.setOpenLoopRampRate(ramprate);
+    RobotContainer.l2.setSmartCurrentLimit(40);
+    RobotContainer.l2.setClosedLoopRampRate(ramprate);
+    RobotContainer.l2.setOpenLoopRampRate(ramprate);
+    RobotContainer.r1.setSmartCurrentLimit(40);
+    RobotContainer.r1.setClosedLoopRampRate(ramprate);
+    RobotContainer.r1.setOpenLoopRampRate(ramprate);
+    RobotContainer.r2.setSmartCurrentLimit(40);
+    RobotContainer.r2.setClosedLoopRampRate(ramprate);
+    RobotContainer.r2.setOpenLoopRampRate(ramprate);
+
     
     try {
       m_robotContainer = new RobotContainer();
@@ -55,12 +82,14 @@ public class Robot extends TimedRobot {
 
     m_chooser = new SendableChooser<>();
     m_chooser.addOption("forward", new Forward());
+    m_chooser.addOption("forward2", new Forward2());
+    m_chooser.addOption("Basic Turning", new BasicTurn());
     // try {
-    //   m_chooser.addOption("pathweaver1", new PathweaverPath());
-    //   m_chooser.addOption("chain", new Chain());
-    //   m_chooser.addOption("smiles", new Smiles());
+      // m_chooser.addOption("pathweaver1", new PathweaverPath());
+      // m_chooser.addOption("chain", new Chain());
+      // m_chooser.addOption("smiles", new Smiles());
     // } catch (IOException e1) {
-    //   e1.printStackTrace();
+      // e1.printStackTrace();
     // }
     SmartDashboard.putData("Auto choochooer", m_chooser);
     // try {
@@ -68,6 +97,7 @@ public class Robot extends TimedRobot {
     // } catch (IOException e) {
     //   e.printStackTrace();
     // }
+    RobotContainer.sol1.set(Value.kForward);
 
     driveSub.resetEncoders();
     driveSub.zeroHeading();
@@ -148,6 +178,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
+    RobotContainer.r1.setIdleMode(IdleMode.kBrake);
+    RobotContainer.r2.setIdleMode(IdleMode.kBrake);
+    RobotContainer.l1.setIdleMode(IdleMode.kBrake);
+    RobotContainer.l2.setIdleMode(IdleMode.kBrake);
+
     SmartDashboarding();
     if(RobotContainer.dbumperRight.get()){
       driveSub.resetEncoders();
@@ -166,19 +201,27 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("Wheel Speeds", driveSub.getWheelSpeeds().toString());
     SmartDashboard.putNumber("l1",RobotContainer.l1.getEncoder().getPosition());
     SmartDashboard.putNumber("l2",RobotContainer.l2.getEncoder().getPosition());
-    SmartDashboard.putNumber("r1",RobotContainer.r1.getEncoder().getPosition());
-    SmartDashboard.putNumber("r2",RobotContainer.r2.getEncoder().getPosition());
+    SmartDashboard.putNumber("r1",-RobotContainer.r1.getEncoder().getPosition());
+    SmartDashboard.putNumber("r2",-RobotContainer.r2.getEncoder().getPosition());
     SmartDashboard.putNumber("Gyro Heading", driveSub.getHeading());
     SmartDashboard.putNumber("Raw gyro", driveSub.m_gyro.getAngle());
     SmartDashboard.putString("Pose", driveSub.getPose().toString());
     SmartDashboard.putString("Pose Rot", driveSub.getPose().getRotation().toString());
     SmartDashboard.putString("Pose Dist", driveSub.getPose().getTranslation().toString());
-    // SmartDashboard.putNumber("R Dist", (RobotContainer.backRight.getEncoder().getPosition() / RobotContainer.ticksPerRevolution) * RobotContainer.wheelCircumferenceMeters);
-    // SmartDashboard.putNumber("L Dist", (-RobotContainer.backLeft.getEncoder().getPosition() / RobotContainer.ticksPerRevolution) * RobotContainer.wheelCircumferenceMeters);
-    // SmartDashboard.putNumber("R Vel", (RobotContainer.backRight.getEncoder().getVelocity()/60 / RobotContainer.ticksPerRevolution) * RobotContainer.wheelCircumferenceMeters);
-    // SmartDashboard.putNumber("L Vel", (-RobotContainer.backLeft.getEncoder().getVelocity()/60 / RobotContainer.ticksPerRevolution) * RobotContainer.wheelCircumferenceMeters);
+    if(RobotContainer.sol1.get() == Value.kForward){
+      SmartDashboard.putNumber("R Dist", (-RobotContainer.r1.getEncoder().getPosition() / Constants.ticksPerRevolutionLow) * Constants.wheelCircumferenceMeters);
+      SmartDashboard.putNumber("L Dist", (RobotContainer.l1.getEncoder().getPosition() / Constants.ticksPerRevolutionLow) * Constants.wheelCircumferenceMeters);
+      SmartDashboard.putNumber("R Vel", (-RobotContainer.r1.getEncoder().getVelocity()/60 / Constants.ticksPerRevolutionLow) * Constants.wheelCircumferenceMeters);
+      SmartDashboard.putNumber("L Vel", (RobotContainer.l1.getEncoder().getVelocity()/60 / Constants.ticksPerRevolutionLow) * Constants.wheelCircumferenceMeters);
+    }else{
+      SmartDashboard.putNumber("R Dist", (-RobotContainer.r1.getEncoder().getPosition() / Constants.ticksPerRevolutionHigh) * Constants.wheelCircumferenceMeters);
+      SmartDashboard.putNumber("L Dist", (RobotContainer.l1.getEncoder().getPosition() / Constants.ticksPerRevolutionHigh) * Constants.wheelCircumferenceMeters);
+      SmartDashboard.putNumber("R Vel", (-RobotContainer.r1.getEncoder().getVelocity()/60 / Constants.ticksPerRevolutionHigh) * Constants.wheelCircumferenceMeters);
+      SmartDashboard.putNumber("L Vel", (RobotContainer.l1.getEncoder().getVelocity()/60 / Constants.ticksPerRevolutionHigh) * Constants.wheelCircumferenceMeters);  
+    }
     SmartDashboard.putNumber("axis 1", RobotContainer.driver.getRawAxis(1));
     SmartDashboard.putNumber("axis 4", RobotContainer.driver.getRawAxis(4));
+    SmartDashboard.putString("Sol", RobotContainer.sol1.get().toString());
     // SmartDashboard.putNumber("R volts", RobotContainer.backRight.getMotorOutputVoltage());
     // SmartDashboard.putNumber("L volts", -RobotContainer.backLeft.getMotorOutputVoltage());
   }
